@@ -32,14 +32,12 @@
 
 int buttonsAnalogValue = 0;
 
-const int buttonsPin = 13;
-
 int buttonEnterState = LOW;
 int buttonUpState = LOW;
 int buttonDownState = LOW;
 
 IndIOButtonPanel::IndIOButtonPanel(){
-	_pin = 13;
+	_pin = A5;
 }
 
 IndIOButtonPanel::IndIOButtonPanel(int pin){
@@ -47,7 +45,7 @@ IndIOButtonPanel::IndIOButtonPanel(int pin){
 }
 int IndIOButtonPanel::readButtonPanel(){
     
-  buttonsAnalogValue = analogRead(buttonsPin);
+  buttonsAnalogValue = analogRead(_pin);
   
 if (buttonsAnalogValue>400 && buttonsAnalogValue< 700 ){
     buttonEnterState = HIGH;
