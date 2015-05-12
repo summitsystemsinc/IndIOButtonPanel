@@ -28,7 +28,7 @@
 static UC1701 lcd;
 
 //Glyph width, plus the separator
-static const int GLYPTH_WIDTH = 6;
+static const int GLYPH_WIDTH = 6;
 
 int lastButton;
 int currentButton;
@@ -47,11 +47,13 @@ void setup() {
   screenWrite(NONE_PRESSED);
   
   lcd.setCursor(0,2);
-  lcd.print("ENTER: ");
+  lcd.print("ENTER: 0");
   lcd.setCursor(0,3);
-  lcd.print("UP: ");
+  lcd.print("UP: 0");
   lcd.setCursor(0,4);
-  lcd.print("DOWN: ");
+  lcd.print("DOWN: 0");
+  lcd.setCursor(0,7);
+  lcd.print("Analog Value: ");
 }
 
 void loop() {
@@ -64,6 +66,12 @@ void loop() {
     screenWrite(currentButton);
     lastButton = currentButton;
   }
+  if(millis()%100 ==0){
+    lcd.setCursor(GLYPH_WIDTH*14,7);
+    lcd.print("    ");
+    lcd.setCursor(GLYPH_WIDTH*14,7);
+    lcd.print(btns.buttonsAnalogValue);
+  }
 }
 
 void screenWrite(int btn){
@@ -72,19 +80,19 @@ void screenWrite(int btn){
       case ENTER_PRESSED:
         lcd.print("ENTER");
         enterCount++;
-        lcd.setCursor(GLYPTH_WIDTH*7,2);
+        lcd.setCursor(GLYPH_WIDTH*7,2);
         lcd.print(enterCount);
         break;
       case UP_PRESSED:
         lcd.print("UP");
         upCount++;
-        lcd.setCursor(GLYPTH_WIDTH*4,3);
+        lcd.setCursor(GLYPH_WIDTH*4,3);
         lcd.print(upCount);
         break;
       case DOWN_PRESSED:
         lcd.print("DOWN");
         downCount++;
-        lcd.setCursor(GLYPTH_WIDTH*6,4);
+        lcd.setCursor(GLYPH_WIDTH*6,4);
         lcd.print(downCount);
         break;
       default:
