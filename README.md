@@ -39,7 +39,7 @@ const int NONE_PRESSED = 0;
 ```
 ### Functions
 ```c
-int readButtonPanel(); //Returns 0-4, noted above.
+int readButtonPanel(); //Returns 0-3, noted above.
 ```
 **NOTE** With the current logic, sometimes UP + DOWN yields an ENTER being pressed.
 
