@@ -27,8 +27,15 @@
 
 static UC1701 lcd;
 
+//Glyph width, plus the separator
+static const int GLYPTH_WIDTH = 6;
+
 int lastButton;
 int currentButton;
+
+int enterCount = 0;
+int upCount = 0;
+int downCount = 0;
 
 IndIOButtonPanel btns;
 
@@ -38,6 +45,13 @@ void setup() {
   currentButton = NONE_PRESSED;
   lcd.begin();
   screenWrite(NONE_PRESSED);
+  
+  lcd.setCursor(0,2);
+  lcd.print("ENTER: ");
+  lcd.setCursor(0,3);
+  lcd.print("UP: ");
+  lcd.setCursor(0,4);
+  lcd.print("DOWN: ");
 }
 
 void loop() {
@@ -47,26 +61,33 @@ void loop() {
   if(currentButton != lastButton){
     lcd.setCursor(0,0);
     lcd.print("               ");
-    lcd.setCursor(0,0);
     screenWrite(currentButton);
     lastButton = currentButton;
   }
 }
 
 void screenWrite(int btn){
+  lcd.setCursor(0,0);
   switch(currentButton){
       case ENTER_PRESSED:
         lcd.print("ENTER");
+        enterCount++;
+        lcd.setCursor(GLYPTH_WIDTH*7,2);
+        lcd.print(enterCount);
         break;
       case UP_PRESSED:
         lcd.print("UP");
+        upCount++;
+        lcd.setCursor(GLYPTH_WIDTH*4,3);
+        lcd.print(upCount);
         break;
       case DOWN_PRESSED:
         lcd.print("DOWN");
+        downCount++;
+        lcd.setCursor(GLYPTH_WIDTH*6,4);
+        lcd.print(downCount);
         break;
       default:
         lcd.print("NOTHING PRESSED");
     }
 }
-
-
