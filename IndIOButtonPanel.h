@@ -41,8 +41,11 @@ class IndIOButtonPanel{
 	public: 
 		IndIOButtonPanel();
 		IndIOButtonPanel(int pin);
+		IndIOButtonPanel(int pin, long debounceTime);
 		int readButtonPanel();
+		int buttonsAnalogValue;
 	private:
 		int _pin;
+		long _debounceTime;
 };
 #endif

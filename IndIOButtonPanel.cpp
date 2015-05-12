@@ -21,6 +21,8 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
+ *
+ * Code used from IndustruinoDemoCode_32u4.ino
  */
  
 #if ARDUINO < 100
@@ -30,44 +32,52 @@
 #endif
 #include "IndIOButtonPanel.h"
 
-int buttonsAnalogValue = 0;
+int readState = NONE_PRESSED;
+int buttonState = -1;
+int lastReadState = NONE_PRESSED;
 
-int buttonEnterState = LOW;
-int buttonUpState = LOW;
-int buttonDownState = LOW;
+long lastDebounceTime = 0;
 
 IndIOButtonPanel::IndIOButtonPanel(){
 	_pin = A5;
+	buttonsAnalogValue = 0;
+	_debounceTime = 100;
 }
 
 IndIOButtonPanel::IndIOButtonPanel(int pin){
 	_pin = pin;
+	buttonsAnalogValue = 0;
+	_debounceTime = 100;
+}
+IndIOButtonPanel::IndIOButtonPanel(int pin, long debounceTime){
+	_pin = pin;
+	buttonsAnalogValue = 0;
+	_debounceTime = 100;
+	_debounceTime = debounceTime;
 }
 int IndIOButtonPanel::readButtonPanel(){
-    
   buttonsAnalogValue = analogRead(_pin);
   
-if (buttonsAnalogValue>400 && buttonsAnalogValue< 700 ){
-    buttonEnterState = HIGH;
-    return ENTER_PRESSED;
+  if (buttonsAnalogValue>400 && buttonsAnalogValue< 700 ){
+    readState = ENTER_PRESSED;
+  }else if (buttonsAnalogValue>100 && buttonsAnalogValue<400){
+    readState = UP_PRESSED;
+  }else if (buttonsAnalogValue>700 && buttonsAnalogValue<1000 ){
+    readState = DOWN_PRESSED;
   }else{
-    buttonEnterState = LOW;
+	readState = NONE_PRESSED;
   }
   
-  if (buttonsAnalogValue>100 && buttonsAnalogValue<400){
-    buttonUpState = HIGH;
-    return UP_PRESSED;
-  }else{
-    buttonUpState = LOW;
-  }   
-   
-  if (buttonsAnalogValue>700 && buttonsAnalogValue<1000 ){
-    return DOWN_PRESSED;
-    buttonDownState = HIGH;
-  }else{
-    buttonDownState = LOW;
+  if(readState != lastReadState){
+	  lastDebounceTime = millis();
   }
   
-  //No debouncing...
-  return NONE_PRESSED;
+  if(millis() - lastDebounceTime > _debounceTime){
+	  if(readState != buttonState){
+		  buttonState = readState;
+	  }
+  }
+  
+  lastReadState = readState;
+  return buttonState;
 }
